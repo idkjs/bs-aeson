@@ -2,7 +2,7 @@ open Jest
 open Expect
 
 module Test = struct
-  type default_case = 
+  type default_case =
     | Float
     | Int
     | String
@@ -13,9 +13,9 @@ module Test = struct
 
   type singleEnumerator =
     | SingleEnumerator
-    
+
   (* TODO: tests for this function *)
-  let test decoder prefix = 
+  let test decoder prefix =
     let open Aeson in function
     | Float -> test (prefix ^ "float") (fun () ->
         expectFn decoder (Encode.float 1.23) |> toThrow)
@@ -37,10 +37,10 @@ module Test = struct
     | [] -> ();
     | first::rest ->
         test decoder prefix first;
-        throws decoder ~prefix rest 
+        throws decoder ~prefix rest
 end
 
-let () = 
+let () =
 
 describe "bool" (fun () ->
   let open Aeson in
@@ -62,7 +62,7 @@ describe "float" (fun () ->
     expect @@ float (Encode.float 1.23) |> toEqual 1.23);
   test "int" (fun () ->
     expect @@ float (Encode.int 23) |> toEqual 23.);
-  
+
   Test.throws float [Bool; String; Null; Array; Object;];
 );
 
@@ -77,7 +77,7 @@ describe "int" (fun () ->
     (* Use %raw since integer literals > Int32.max_int overflow without warning *)
     let big_int = [%raw "2147483648"] in
       expect @@ int (Encode.int big_int) |> toEqual big_int);
-  
+
   Test.throws int [Bool; Float; String; Null; Array; Object];
 );
 
@@ -489,15 +489,15 @@ describe "at" (fun () ->
   test "at bool" (fun () ->
     expect @@
       at ["a"; "x"; "y"] bool (Js.Json.parseExn {| {
-        "a": { "x" : { "y" : false } }, 
-        "b": false 
+        "a": { "x" : { "y" : false } },
+        "b": false
       } |})
       |> toEqual false);
   test "field nullAs" (fun () ->
     expect @@
       at ["a"; "x"] (nullAs Js.null) (Js.Json.parseExn {| {
-        "a": { "x" : null }, 
-        "b": null 
+        "a": { "x" : null },
+        "b": null
       } |})
       |> toEqual Js.null);
 
@@ -582,7 +582,7 @@ describe "optionalField" (fun () ->
     expect @@
       (optionalField "x" string (Js.Json.parseExn {| { "x": null} |}))
     |> toEqual None);
-  
+
   test "optionalField - field does not exist" (fun () ->
     expect @@
       (optionalField "y" int (Js.Json.parseExn {| { "x": 2} |}))
@@ -612,22 +612,22 @@ describe "result" (fun () ->
 
   test "Ok" (fun () ->
     expect @@ (result int string) (Js.Json.parseExn {| {"Error": "hello"} |}) |> toEqual (Belt.Result.Error "hello"));
-  
+
   test "Error" (fun () ->
     expect @@ (result int string) (Js.Json.parseExn {| {"Ok": 2} |}) |> toEqual (Belt.Result.Ok 2));
 );
-  
+
 describe "either" (fun () ->
   let open Aeson in
   let open! Decode in
 
   test "Right" (fun () ->
     expect @@ (either int string) (Js.Json.parseExn {| {"Right": "hello"} |}) |> toEqual (Compatibility.Either.Right "hello"));
-  
+
   test "Left" (fun () ->
     expect @@ (either int string) (Js.Json.parseExn {| {"Left": 2} |}) |> toEqual (Compatibility.Either.Left 2));
 );
-  
+
 describe "tryEither" (fun () ->
   let open Aeson in
   let open! Decode in
@@ -690,13 +690,13 @@ describe "andThen" (fun () ->
 describe "composite expressions" (fun () ->
   let open Aeson in
   let open! Decode in
-  
+
   test "dict array array int" (fun () ->
     expect @@
       (dict (array (array int)) (Js.Json.parseExn {| { "a": [[1, 2], [3]], "b": [[4], [5, 6]] } |}))
       |> toEqual (Obj.magic [%obj { a = [| [|1; 2|]; [|3|] |]; b = [| [|4|]; [|5; 6|] |] }]));
   test "dict array array int - heterogenous structure" (fun () ->
-    expectFn 
+    expectFn
       (dict (array (array int))) (Js.Json.parseExn {| { "a": [[1, 2], [true]], "b": [[4], [5, 6]] } |})
       |> toThrow);
   test "dict array array int - heterogenous structure 2" (fun () ->

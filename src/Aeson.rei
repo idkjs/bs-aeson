@@ -1,4 +1,4 @@
-(** Efficient JSON handling
+/** Efficient JSON handling
 This module has four aspects to it:
 - Parsing, which turns a JSON string into an encoded JSON data structure
 - Stringificaiton, which produces a JSON string from an encoded JSON data structure
@@ -93,37 +93,37 @@ let _ =
         "foo": [1, 2, 3],
         "bar": [9, 8, 7]
       }
-    |} 
+    |}
 ]}
 @example {[
 (* Decoding a highly dynamic JSON data structure using reifyType *)
 open Js.Json
 let getIds s =
-  let json = 
+  let json =
     try parse s with
     | _ -> failwith "Error parsing JSON string"
-  in 
+  in
   match reifyType json with
   | (Object, value) ->
     (* In this branch, compiler infer value : t Js.Dict.t *)
     begin match Js.Dict.get value "ids" with
-    | Some ids -> 
+    | Some ids ->
       begin match reifyType ids with
-      | (Array, ids) -> 
+      | (Array, ids) ->
         (* In this branch compiler infer ids : t array *)
         ids
       | _ -> failWith "Expected an array"
-      end 
+      end
     | None -> failWith "Expected an `ids` property"
-    end 
+    end
   | _ -> failWith "Expected an object"
 (* prints `1, 2, 3` *)
 let _ =
-  Js.log \@\@ getIds {| { "ids" : [1, 2, 3 ] } |} 
+  Js.log \@\@ getIds {| { "ids" : [1, 2, 3 ] } |}
 ]}
 @see <https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON> MDN
-*) 
+*/;
 
-module Decode = Aeson_decode
-module Encode = Aeson_encode
-module Compatibility = Aeson_compatibility
+module Decode = Aeson_decode;
+module Encode = Aeson_encode;
+module Compatibility = Aeson_compatibility;

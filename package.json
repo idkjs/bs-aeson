@@ -28,7 +28,7 @@
     "bs-zarith": "^3.1.0"
   },
   "devDependencies": {
-    "@glennsl/bs-jest": "^0.4.9",
-    "bs-platform": "^8.4.2"
+    "@glennsl/bs-jest": "^0.7.0",
+    "bs-platform": "^9.0.2"
   }
 }
